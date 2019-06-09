@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PizzaApp.Models.IRepositories;
+using PizzaApp.Models.MockRepositories;
 
 namespace PizzaApp
 {
@@ -31,7 +33,9 @@ namespace PizzaApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
+            //dependency injection
+            services.AddSingleton<IPizzaRepository, MockPizzaRepository>();
+            services.AddSingleton<IUserRepository, MockUserRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

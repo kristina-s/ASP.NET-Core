@@ -1,4 +1,4 @@
-﻿@model PizzaApp.Models.Employee
+﻿@model PizzaApp.Models.User
 
 @{
     ViewData["Title"] = "Delete";
@@ -9,7 +9,7 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Employee</h4>
+    <h4>User</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -19,34 +19,34 @@
             @Html.DisplayFor(model => model.Id)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.FirstName)
+            @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.LastName)
+            @Html.DisplayNameFor(model => model.Email)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.LastName)
+            @Html.DisplayFor(model => model.Email)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.Address)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.HireDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.HireDate)
+            @Html.DisplayFor(model => model.Address)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.City)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.City)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Phone)
         </dd>
     </dl>
     

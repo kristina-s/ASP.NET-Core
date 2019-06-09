@@ -4,43 +4,113 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PizzaApp.Models;
+using PizzaApp.Models.IRepositories;
+using PizzaApp.Models.ViewModels;
 
 namespace PizzaApp.Controllers
 {
-    [Route("pizzaapp")]
     public class PizzaController : Controller
     {
-        List<Pizza> pizzas;
-        public PizzaController()
+        //dependency injection
+        private IPizzaRepository pizzas;
+        public PizzaController(IPizzaRepository repository)
         {
-            pizzas = new List<Pizza>()
-            {
-                new Pizza {Id=1, Name="Capriciosa", PizzaTypeId=1, Size=Size.small, Price=150},
-                new Pizza {Id=2, Name="Quatro Staggione", PizzaTypeId=2, Size=Size.medium, Price=250},
-                new Pizza {Id=3, Name="Vegetariana", PizzaTypeId=3, Size=Size.large, Price=450}
-            };
+            pizzas = repository;
         }
 
-        [Route("mypage")]
         public IActionResult Index()
         {
             ViewData["Message"] = "Welcome to our pizza ordering app!";
 
-            var model = pizzas;
+            var model = pizzas.GetAll();
             return View(model);
         }
 
-        [Route("Details")]
         public IActionResult Details(int id)
         {
-            var pizza = pizzas.FirstOrDefault(x => x.Id == id);
+            var pizza = pizzas.Get(id);
             return View(pizza);
         }
 
-        [Route("Create")]
-        public IActionResult Create(int id)
+        [HttpGet]
+        public IActionResult Create()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(CreatePizzaViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var pizza = new Pizza();
+                pizza.Name = model.Name;
+                pizza.PizzaTypeId = model.PizzaTypeId;
+                pizza.Size = model.Size;
+                pizza.Price = model.Price;
+                pizzas.Add(pizza);
+                return RedirectToAction("Index");
+            }
+            return View("Create");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Pizza pizza = pizzas.Get(id);
+            if (pizza == null)
+            {
+                ErrorViewModel errorViewModel = new ErrorViewModel
+                {
+                    RequestId = id.ToString()
+                };
+                return View("Error", errorViewModel);
+            }
+
+            EditPizzaViewModel editPizzaViewModel = new EditPizzaViewModel
+            {
+                Id = pizza.Id,
+                Name = pizza.Name,
+                PizzaTypeId = pizza.PizzaTypeId,
+                Size = pizza.Size,
+                Price = pizza.Price
+
+            };
+            return View(editPizzaViewModel);
+        }
+        [HttpPost]
+        public IActionResult Edit(EditPizzaViewModel model)
+        {
+            Pizza pizza = pizzas.Get(model.Id);
+            if (ModelState.IsValid)
+            {
+                pizza.Name = model.Name;
+                pizza.PizzaTypeId = model.PizzaTypeId;
+                pizza.Size = model.Size;
+                pizza.Price = model.Price;
+                pizzas.Update(pizza);
+                return View("Details", pizza);
+
+            }
+            return View("Details", pizza);
+        }
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            Pizza pizza = pizzas.Get(id);
+            if(pizza != null)
+            {
+                return View(pizza);
+            }
+            return View(pizza);
+        }
+
+       [HttpPost]
+       public IActionResult Delete(Pizza pizza)
+        {
+            
+            pizzas.Delete(pizza.Id);
+            return RedirectToAction("Index");
         }
     }
 }
