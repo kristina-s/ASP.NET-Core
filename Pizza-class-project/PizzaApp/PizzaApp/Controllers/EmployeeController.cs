@@ -4,58 +4,121 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PizzaApp.Models;
+using PizzaApp.Models.IRepositories;
+using PizzaApp.Models.ViewModels;
 
 namespace PizzaApp.Controllers
 {
-    [Route("employeepage")]
+    //[Route("employeepage")]
     public class EmployeeController : Controller
     {
-        List<Employee> employees;
-
-        public EmployeeController()
+        //dependency injection
+        private IEmployeeRepository employees;
+        public EmployeeController(IEmployeeRepository repository)
         {
-            employees = new List<Employee>()
-            {
-                new Employee{Id=1, FirstName="Jonh", LastName="Smith", City="LA", HireDate=new DateTime(2018,3,3), Title="administration"},
-                new Employee{Id=2, FirstName="Tim", LastName="Jensen", City="Detroit", HireDate=new DateTime(2015,12,12), Title="chef"},
-                new Employee{Id=3, FirstName="Emma", LastName="Taylor", City="Miami", HireDate=new DateTime(2009,6,6), Title="chef"},
-                new Employee{Id=4, FirstName="Steven", LastName="Preston", City="Miami", HireDate=new DateTime(2012,3,2), Title="delivery"}
-            };
+            employees = repository;
         }
 
-        [Route("emp")]
+        //[Route("emp")]
         public IActionResult Index()
         {
             ViewData["Message"] = "This is a list of our employees.";
-            var model = employees;
+            var model = employees.GetAll();
             return View(model);
         }
 
-        [Route("Details")]
+        //[Route("Details")]
         public IActionResult Details(int id)
         {
-            var employee = employees.FirstOrDefault(x => x.Id == id);
+            Employee employee = employees.Get(id);
             return View(employee);
         }
 
-        [Route("Create")]
-        public IActionResult Create(int id)
+        //[Route("Create")]
+        [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
-
-        [Route("Delete")]
-        public IActionResult Delete(int id)
-        {         
-            var list = employees.Where(x => x.Id != id).ToList();
-            employees = list;                                 
-            return View("Index", employees);
+        [HttpPost]
+        public IActionResult Create(CreateEmployeeViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var employee = new Employee();
+                employee.FirstName = model.FirstName;
+                employee.LastName = model.LastName;
+                employee.City = model.City;
+                employee.HireDate = model.HireDate;
+                employee.Title = model.Title;
+                employees.Add(employee);
+                return RedirectToAction("Index");
+            }
+            return View("Create");
         }
 
-        [Route("Edit")]
+        //[Route("Delete")]
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            Employee employee = employees.Get(id);
+            if (employee != null)
+            {
+                return View(employee);
+            }
+            return View(employee);
+        }
+        [HttpPost]
+        public IActionResult Delete(Employee employee)
+        {
+
+            employees.Delete(employee.Id);
+            return RedirectToAction("Index");
+        }
+
+
+        //[Route("Edit")]
+        [HttpGet]
         public IActionResult Edit(int id)
         {
-            return View();
+            Employee employee = employees.Get(id);
+            if (employee == null)
+            {
+                ErrorViewModel errorViewModel = new ErrorViewModel
+                {
+                    RequestId = id.ToString()
+                };
+                return View("Error", errorViewModel);
+            }
+
+            EditEmployeeViewModel editEmployeeViewModel = new EditEmployeeViewModel
+            {
+                Id = employee.Id,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                HireDate = employee.HireDate,
+                Title = employee.Title,
+                City = employee.City,
+            };
+            return View(editEmployeeViewModel);
+        }
+        [HttpPost]
+        public IActionResult Edit(EditEmployeeViewModel model)
+        {
+            Employee employee = employees.Get(model.Id);
+            if (ModelState.IsValid)
+            {
+                employee.FirstName = model.FirstName;
+                employee.LastName = model.LastName;
+                employee.City = model.City;
+                employee.HireDate = model.HireDate;
+                employee.Title = model.Title;
+
+                employees.Update(employee);
+                return View("Details", employee);
+
+            }
+            return View("Details", employee);
         }
     }
 }

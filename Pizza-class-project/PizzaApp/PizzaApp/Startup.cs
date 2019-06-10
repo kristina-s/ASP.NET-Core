@@ -36,6 +36,7 @@ namespace PizzaApp
             //dependency injection
             services.AddSingleton<IPizzaRepository, MockPizzaRepository>();
             services.AddSingleton<IUserRepository, MockUserRepository>();
+            services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

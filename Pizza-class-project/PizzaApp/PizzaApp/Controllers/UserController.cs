@@ -73,7 +73,6 @@ namespace PizzaApp.Controllers
                 Address = user.Address,
                 Email = user.Email,
                 Phone = user.Phone
-
             };
             return View(editUserViewModel);
         }
