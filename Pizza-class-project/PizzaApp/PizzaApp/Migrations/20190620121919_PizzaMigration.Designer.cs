@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PizzaApp.Models;
+using PizzaApp.Models.ViewModels;
 
 namespace PizzaApp.Migrations
 {
-    [DbContext(typeof(UserDbContext))]
-    [Migration("20190620085631_first-migration")]
-    partial class firstmigration
+    [DbContext(typeof(PizzaDbContext))]
+    [Migration("20190620121919_PizzaMigration")]
+    partial class PizzaMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -134,6 +134,12 @@ namespace PizzaApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PizzaType");
+
+                    b.HasData(
+                        new { Id = 1, Description = "dough, ham, mashrums", Name = "Capri" },
+                        new { Id = 2, Description = "dough, cheese, mashrums", Name = "Quatro" },
+                        new { Id = 3, Description = "dough, vegetables, mashrums", Name = "Vege" }
+                    );
                 });
 
             modelBuilder.Entity("PizzaApp.Models.User", b =>
@@ -154,14 +160,7 @@ namespace PizzaApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
-
-                    b.HasData(
-                        new { Id = 1, Address = "23 Oktomvri", City = "Skopje", Email = "peki@hotmail.com", Name = "Peki", Phone = "1234567" },
-                        new { Id = 2, Address = "Partizanska", City = "Bitola", Email = "ang@hotmail.com", Name = "Angela", Phone = "34534567" },
-                        new { Id = 3, Address = "11 Oktomvri", City = "Ohrid", Email = "joko@hotmail.com", Name = "Jovan", Phone = "1231234" },
-                        new { Id = 4, Address = "Ilindenska", City = "Gevgelija", Email = "kali@hotmail.com", Name = "Kalina", Phone = "1238765" }
-                    );
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("PizzaApp.Models.Order", b =>

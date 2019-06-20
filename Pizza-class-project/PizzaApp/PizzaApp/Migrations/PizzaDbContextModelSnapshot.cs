@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PizzaApp.Models.ViewModels;
 
-namespace PizzaApp.Migrations.PizzaDb
+namespace PizzaApp.Migrations
 {
     [DbContext(typeof(PizzaDbContext))]
     partial class PizzaDbContextModelSnapshot : ModelSnapshot
@@ -114,7 +114,7 @@ namespace PizzaApp.Migrations.PizzaDb
 
                     b.HasIndex("PizzaTypeId");
 
-                    b.ToTable("Pizzas");
+                    b.ToTable("Pizza");
                 });
 
             modelBuilder.Entity("PizzaApp.Models.PizzaType", b =>
@@ -131,7 +131,7 @@ namespace PizzaApp.Migrations.PizzaDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("PizzaTypes");
+                    b.ToTable("PizzaType");
 
                     b.HasData(
                         new { Id = 1, Description = "dough, ham, mashrums", Name = "Capri" },

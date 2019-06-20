@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PizzaApp.Migrations
 {
-    public partial class firstmigration : Migration
+    public partial class PizzaMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,7 +41,7 @@ namespace PizzaApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -54,7 +54,7 @@ namespace PizzaApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,9 +104,9 @@ namespace PizzaApp.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Order_Users_UserId",
+                        name: "FK_Order_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -141,15 +141,19 @@ namespace PizzaApp.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Address", "City", "Email", "Name", "Phone" },
-                values: new object[,]
-                {
-                    { 1, "23 Oktomvri", "Skopje", "peki@hotmail.com", "Peki", "1234567" },
-                    { 2, "Partizanska", "Bitola", "ang@hotmail.com", "Angela", "34534567" },
-                    { 3, "11 Oktomvri", "Ohrid", "joko@hotmail.com", "Jovan", "1231234" },
-                    { 4, "Ilindenska", "Gevgelija", "kali@hotmail.com", "Kalina", "1238765" }
-                });
+                table: "PizzaType",
+                columns: new[] { "Id", "Description", "Name", "Photo" },
+                values: new object[] { 1, "dough, ham, mashrums", "Capri", null });
+
+            migrationBuilder.InsertData(
+                table: "PizzaType",
+                columns: new[] { "Id", "Description", "Name", "Photo" },
+                values: new object[] { 2, "dough, cheese, mashrums", "Quatro", null });
+
+            migrationBuilder.InsertData(
+                table: "PizzaType",
+                columns: new[] { "Id", "Description", "Name", "Photo" },
+                values: new object[] { 3, "dough, vegetables, mashrums", "Vege", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_EmployeeId",
@@ -192,7 +196,7 @@ namespace PizzaApp.Migrations
                 name: "Employee");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "PizzaType");
