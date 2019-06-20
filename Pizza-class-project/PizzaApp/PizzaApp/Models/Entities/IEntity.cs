@@ -7,6 +7,6 @@ namespace PizzaApp.Models
 {
     public class IEntity
     {
-        int Id { get; set; }
+        public int Id { get; set; }
     }
 }

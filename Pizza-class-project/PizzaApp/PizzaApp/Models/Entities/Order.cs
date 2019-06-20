@@ -7,7 +7,6 @@ namespace PizzaApp.Models
 {
     public class Order :IEntity
     {
-        public int Id { get; set; }
         public int CustomerId { get; set; }
         public int UserId { get; set; }
         public DateTime OrderDate { get; set; }

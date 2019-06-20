@@ -20,7 +20,10 @@ namespace PizzaApp.Controllers
         //index
         public IActionResult Index()
         {
+            ViewBag.TotalCount = users.GetAll().Count();
+            ViewData["Counter"] = users.GetAll().Count();
             var model = users.GetAll();
+            var c = View(model);
             return View(model);
         }
         //details

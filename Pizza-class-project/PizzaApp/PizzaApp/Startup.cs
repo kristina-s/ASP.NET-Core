@@ -7,10 +7,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PizzaApp.Models;
 using PizzaApp.Models.IRepositories;
 using PizzaApp.Models.MockRepositories;
+using PizzaApp.Models.SqlPizzaRepository;
+using PizzaApp.Models.SqlUserRepository;
+using PizzaApp.Models.ViewModels;
 
 namespace PizzaApp
 {
@@ -34,10 +39,17 @@ namespace PizzaApp
             });
 
             //dependency injection
-            services.AddSingleton<IPizzaRepository, MockPizzaRepository>();
-            services.AddSingleton<IUserRepository, MockUserRepository>();
-            services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContextPool<PizzaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PizzaConnection")));
+            services.AddDbContextPool<UserDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PizzaConnection")));
+
+           
+            services.AddScoped<IPizzaRepository, SqlPizzaRepository>()
+                .AddScoped<IUserRepository, SqlUserRepository>()
+                .AddSingleton<IUserRepository, MockUserRepository>()
+                .AddSingleton<IEmployeeRepository, MockEmployeeRepository>()
+                .AddSingleton<IPizzaTypeRepository, MockPizzaTypeRepository>()
+                .AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
